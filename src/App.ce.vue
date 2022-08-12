@@ -3,6 +3,7 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue';
 // import { MaButton } from '@misteraladin/frontend-ui';
+import BannerLogin from './components/banner-login/index.vue';
 </script>
 
 <template>
@@ -10,12 +11,12 @@ import HelloWorld from './components/HelloWorld.vue';
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
     <!-- <MaButton product="explore" /> -->
-    <MaButton>Search Hotel</MaButton>
+    <BannerLogin />
   </div>
 </template>
 
-<style>
-@import '@misteraladin/frontend-ui/dist/styles/index.css';
+<style lang="scss">
+/* @import '@misteraladin/frontend-ui/dist/styles/index.css'; */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
