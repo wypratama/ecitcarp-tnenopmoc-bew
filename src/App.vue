@@ -3,6 +3,14 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue';
 // import { MaButton } from '@misteraladin/frontend-ui';
+import { ref } from 'vue'
+
+const isLoading = ref(false)
+
+const handleSearchFlight = () => {
+  console.log("Flight searching ....");
+  isLoading.value = true;
+}
 </script>
 
 <template>
@@ -10,12 +18,17 @@ import HelloWorld from './components/HelloWorld.vue';
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
     <!-- <MaButton product="explore" /> -->
-    <MaButton>Search Hotel</MaButton>
+
+    <MaButton
+      :is-loading="isLoading"
+      @click="handleSearchFlight()"
+    >
+      Search Flight International
+    </MaButton>
   </div>
 </template>
 
 <style>
-@import '@misteraladin/frontend-ui/dist/styles/index.css';
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

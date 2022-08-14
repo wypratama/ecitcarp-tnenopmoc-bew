@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@misteraladin/frontend-ui": "github:misteraladin/frontend-ui#iqbal-test",
     "vue": "^3.2.25"
   },
   "devDependencies": {
