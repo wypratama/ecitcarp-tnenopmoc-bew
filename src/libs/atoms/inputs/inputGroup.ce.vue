@@ -37,9 +37,9 @@
   }
 
   ::slotted([data-group='prepend']) {
-    margin-right: functions.toRem(8);
+    // margin-right: functions.toRem(8);
     display: inline-flex;
-    width: 100px;
+    width: min-content;
     flex-grow: 0;
     order: 1;
     border: 1px solid #e0e0e0;
@@ -47,7 +47,7 @@
   }
 
   ::slotted([data-group='append']) {
-    margin-right: functions.toRem(8);
+    // margin-right: functions.toRem(8);
     display: inline-flex;
     width: fit-content;
     flex-grow: 0;
@@ -58,12 +58,26 @@
 
   ::slotted(*:last-child, :not(.ma-input)) {
     border-right: 1px solid #e0e0e0;
-    border-radius: 0 8px 8px 0;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
   }
 
   ::slotted(*:last-child[data-group='primary']) {
     border-right: 1px solid #e0e0e0;
-    border-radius: 0 8px 8px 0;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  ::slotted(*:nth-child(2), :not(.ma-input)) {
+    border-left: 1px solid #e0e0e0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  ::slotted(*:nth-child(2)[data-group='primary']) {
+    border-left: 1px solid #e0e0e0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
   }
 }
 </style>

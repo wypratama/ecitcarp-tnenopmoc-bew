@@ -1,8 +1,17 @@
 {
-  "name": "web-component",
+  "name": "ma-web-component",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": ["dist"],
+  "main": "./dist/ma-web-component.umd.js",
+  "module": "./dist/ma-web-component.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ma-web-component.es.js",
+      "require": "./dist/ma-web-component.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -12,6 +21,7 @@
     "vue": "^3.2.37"
   },
   "devDependencies": {
+    "@types/node": "^18.7.6",
     "@vitejs/plugin-vue": "^3.0.3",
     "sass": "^1.54.4",
     "typescript": "^4.6.4",

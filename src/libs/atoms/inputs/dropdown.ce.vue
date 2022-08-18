@@ -1,13 +1,91 @@
 <template>
-  <select v-bind="props" :class="['ma-input', props.class]">
-    <option value="Tuan">Tuan</option>
-    <option value="Tuan">Tuan</option>
-    <option value="Tuan">Tuan</option>
-  </select>
+  <div
+    :class="['ma-dropdown', { 'ma-dropdown--open': isOpen }]"
+    v-away="closeOptions"
+  >
+    <input
+      type="text"
+      class="ma-dropdown__input"
+      v-model="bindval"
+      readonly
+      @click="isOpen = !isOpen"
+    />
+    <Transition>
+      <ul
+        :class="[
+          'ma-dropdown__list-wrapper',
+          { 'ma-dropdown__list-wrapper--open': isOpen },
+        ]"
+        v-if="isOpen"
+      >
+        <li
+          class="ma-dropdown__list-item"
+          v-for="(opt, i) in parsedOptions"
+          :key="i"
+          @click="selectOption(opt)"
+        >
+          {{ opt }}
+        </li>
+      </ul>
+    </Transition>
+  </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  directives: {},
+});
+</script>
+
 <script setup lang="ts">
-const props: any = defineProps([]);
+import { computed, defineComponent, ref } from 'vue';
+
+const { options }: any = defineProps(['options']);
+//parse options in case value is a string
+const parsedOptions = JSON.parse(options);
+
+/**
+ * create a custom directive to listen
+ * if the user clicks outside of the component
+ * while the dropdown is open, close the dropdown
+ */
+const vAway = {
+  mounted(el: any, binding: any) {
+    el.clickOutsideEvent = (event: any) => {
+      if (!event.composedPath().includes(el)) {
+        binding.value();
+      }
+    };
+    document.body.addEventListener('click', el.clickOutsideEvent);
+  },
+  beforeUnmount(el: any) {
+    document.body.removeEventListener('click', el.clickOutsideEvent);
+  },
+};
+//binding function for v-away directive
+const closeOptions = () => {
+  isOpen.value = false;
+};
+
+/**
+ * find the longest text in the options array
+ * and set the width of the input to that value
+ */
+const longestString = computed(() => {
+  return (
+    parsedOptions.reduce((acc: string, curr: string) => {
+      return curr.length > acc.length ? curr : acc;
+    }).length + 'ch'
+  );
+});
+
+const isOpen = ref(false);
+const bindval = ref('');
+
+const selectOption = (opt: string) => {
+  bindval.value = opt;
+  isOpen.value = false;
+};
 </script>
 
 <style lang="scss">
@@ -15,35 +93,102 @@ const props: any = defineProps([]);
 @use '../../../styles/functions';
 @use '../../../styles/colors';
 
-.ma-input {
-  padding: functions.toRem(16);
+.v-enter-active,
+.v-leave-active {
+  transition: max-height 0.2s ease-in-out;
+  overflow-y: hidden !important;
+}
+
+.v-enter-from,
+.v-leave-to {
+  max-height: 0 !important;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.ma-dropdown {
+  min-width: calc(v-bind(longestString) + functions.toRem(48) + 1ch);
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: functions.toRem(16);
+  line-height: functions.toRem(24);
   width: 100%;
-  /* identical to box height, or 150% */
-
-  /* neutral/600 */
-
   color: #424242;
   border: 1px solid #e0e0e0;
   border-radius: functions.toRem(8);
+  position: relative;
+
+  &::after {
+    content: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.2946 0.294459C10.9053 -0.0948134 10.2743 -0.0951574 9.88462 0.293691L6 4.16984L2.11538 0.29369C1.72569 -0.0951576 1.09466 -0.0948134 0.705384 0.294459C0.315811 0.684032 0.315811 1.31565 0.705384 1.70523L5.29289 6.29274C5.68342 6.68326 6.31658 6.68326 6.70711 6.29274L11.2946 1.70523C11.6842 1.31565 11.6842 0.684032 11.2946 0.294459Z' fill='%23424242'/%3E%3C/svg%3E");
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    cursor: pointer;
+    pointer-events: none;
+    transition: all 0.2s ease-in-out;
+  }
+
+  &--open {
+    &::after {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__input {
+    padding: functions.toRem(16);
+    border: none;
+    width: 100%;
+    border-radius: functions.toRem(8);
+
+    &:read-only {
+      cursor: pointer;
+    }
+
+    &[datagroup] {
+      border: none;
+    }
+  }
+
+  &__list-wrapper {
+    will-change: max-height;
+    position: absolute;
+    top: functions.toRem(62);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: functions.toRem(8);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    max-height: functions.toRem(520);
+    overflow-y: auto;
+  }
+
+  &__list-item {
+    list-style: none;
+    padding: functions.toRem(16);
+
+    & + & {
+      border-top: 1px solid #e0e0e0;
+    }
+
+    &:hover {
+      background: #eef5ff;
+      cursor: pointer;
+    }
+  }
 
   &[datagroup] {
     border: none;
   }
-}
-
-select {
-  // appearance: menulist !important;
-  // -moz-appearance: menulist !important;
-  // -webkit-appearance: menulist !important;
-  // -o-appearance: menulist !important;
-  // padding-right: 16px;
-  background: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.2946 0.294459C10.9053 -0.0948134 10.2743 -0.0951574 9.88462 0.293691L6 4.16984L2.11538 0.29369C1.72569 -0.0951576 1.09466 -0.0948134 0.705384 0.294459C0.315811 0.684032 0.315811 1.31565 0.705384 1.70523L5.29289 6.29274C5.68342 6.68326 6.31658 6.68326 6.70711 6.29274L11.2946 1.70523C11.6842 1.31565 11.6842 0.684032 11.2946 0.294459Z' fill='%23424242'/%3E%3C/svg%3E")
-    no-repeat right;
-  -webkit-appearance: none;
-  background-position: right 16px center;
 }
 </style>
