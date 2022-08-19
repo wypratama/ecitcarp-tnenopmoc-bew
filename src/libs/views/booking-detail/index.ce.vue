@@ -19,10 +19,12 @@
               gap: 24px;
             "
           >
-            <ma-input-group>
+            <!-- <ma-input-group>
               <label for="first-name">Title</label>
-              <ma-dropdown options='["Tuan", "Nyonya", "Nona"]' />
-            </ma-input-group>
+              <ma-dropdown
+                :options="JSON.stringify(['Tuan', 'Nyonya', 'Nona'])"
+              />
+            </ma-input-group> -->
             <ma-input-group>
               <label for="first-name">Nama Depan</label>
               <ma-input
@@ -98,7 +100,13 @@
 
           <ma-input-group>
             <label for="first-name">Nomor Telepon</label>
-            <ma-dropdown options='["61", "62", "63"]' data-group="prepend" />
+            <ma-dropdown
+              :options="JSON.stringify(data.country.Data)"
+              code="CodeTelp"
+              label="CodeTelp"
+              as-icon="Image"
+              data-group="prepend"
+            />
             <ma-input
               type="text"
               class="hello-there hello-all"
@@ -129,4 +137,15 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps(['data']);
+
+console.log(JSON.parse(props.data));
+const data = JSON.parse(props.data);
+</script>
+
+<style lang="scss">
+@use '../../../styles/global';
+@use '../../../styles/functions';
+@use '../../../styles/colors';
+</style>

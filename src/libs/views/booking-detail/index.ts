@@ -1,9 +1,9 @@
 import { defineCustomElement } from 'vue';
 
-import BookingConfirmation from './index.ce.vue';
+import BookingDetail from './index.ce.vue';
 
-const bookingConfirmation = defineCustomElement(BookingConfirmation);
+const bookingDetail = defineCustomElement(BookingDetail);
 
 export function register() {
-  customElements.define('ma-booking-confirmation', bookingConfirmation);
+  customElements.define('ma-booking-detail', bookingDetail);
 }
